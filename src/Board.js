@@ -9,10 +9,10 @@ export default class Board extends React.Component {
     super(props);
     const clients = this.getClients();
     this.state = {
-      clients: {
-        backlog: clients.filter(client => !client.status || client.status === 'backlog'),
-        inProgress: clients.filter(client => client.status && client.status === 'in-progress'),
-        complete: clients.filter(client => client.status && client.status === 'complete'),
+      clients:{
+        backlog:clients,
+        inProgress:[],
+        complete:[],
       }
     }
     this.swimlanes = {
@@ -56,6 +56,25 @@ export default class Board extends React.Component {
     );
   }
 
+componentDidMount(){
+  const drake = Dragula(Array.from(document.getElementsByClassName('Swimlane-dragColumn')))
+
+  drake.on('drop', (el, target) => {
+
+    if(target.parentNode.innerText.includes('Backlog')){
+      el.className = "Card Card-grey"
+    }
+
+    if(target.parentNode.innerText.includes('In Progress')){
+      el.className = "Card Card-blue"
+    }
+
+    if(target.parentNode.innerText.includes('Complete')){
+      el.className = "Card Card-green"
+    }
+
+  })
+}
   render() {
     return (
       <div className="Board">
